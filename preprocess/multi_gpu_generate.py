@@ -11,7 +11,7 @@ from tqdm import tqdm
 import glob
 
 """
-Run locally or SageMaker with multiple-GPUs
+Run locally with multiple-GPUs
 
 Stop job when an error occurs in any subprocesses
 """

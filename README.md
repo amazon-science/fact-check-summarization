@@ -52,7 +52,7 @@ This generates the binary input files as well as the dictionaries under `<proces
 
 ## JAENS: Joint Entity and Summary Generation
 The idea is to train the seq2seq model to generate `<summary-worthy named entities> <sep> <abstractive summary>`. 
-1. prepare the train/val data by generating entity augmented targets:
+### 1. prepare the train/val data by generating entity augmented targets:
 ```bash
 python preprocess/create_entity_classification_labels.py --base_dir <processed-data-dir> --type entity_augment --tokenizer_dir <bpe-dir>
 ```
@@ -61,7 +61,6 @@ Binarize the augmented targets:
 ```
 python data_prepro_clean.py --mode binarize --input_dir <processed-data-dir>/entity_augment --tokenizer_dir <bpe-dir>
 ```
-
 Since we already binarized the source documents, we just need to create symbolic links to put all binary input files together for fairseq training:
 ```bash
 ln -s <processed-data-dir>/data_bin/train.source-target.source.idx <processed-data-dir>/entity_augment/data_bin/train.source-target.source.idx
@@ -69,8 +68,7 @@ ln -s <processed-data-dir>/data_bin/train.source-target.source.bin <processed-da
 ln -s <processed-data-dir>/data_bin/valid.source-target.source.bin <processed-data-dir>/entity_augment/data_bin/valid.source-target.source.bin
 ln -s <processed-data-dir>/data_bin/valid.source-target.source.idx <processed-data-dir>/entity_augment/data_bin/valid.source-target.source.idx
 ```
-
-2. Fine-tune the BART-large model on the generated data:
+### 2. Fine-tune the BART-large model on the generated data:
 Run the launch scripts `scripts/launch_xsum.py`, `scripts/launch_cnndm.py` or `scripts/launch_newsroom.py` to fine-tune the BART-large model.
 Note you need to modify the following in the scripts:
 - `hyperparameters`.
@@ -79,22 +77,33 @@ Note you need to modify the following in the scripts:
 - `output_path`: location for the model outputs.
 
 If training locally, you need to specify `ngpus` - the number of GPUS in the local machine. Example command:
-`python scripts/launch_xsum.py --datatype ner_filtered --epoch 8 --exp_type local`
-
-If training on Sagemaker, you need to specify the docker image name (`image_name`) as well as execution role (`role`). Example command:
-`python scripts/launch_xsum.py --datatype ner_filtered --epoch 8 --exp_type sagemaker`
-
-3. Generate the summaries from the fine-tuned models:
+```
+python scripts/launch_xsum.py --datatype ner_filtered --epoch 8 --exp_type local
+```
+If training on Sagemaker, you need to specify the docker image name (`image_name`) as well as execution role (`role`). 
+To create Sagemaker docker container and push to ECR:
+```
+./build_and_push.sh <YOUR ECR REPO>
+```
+To launch training job:
+```
+python scripts/launch_xsum.py --datatype ner_filtered --epoch 8 --exp_type sagemaker
+```
+### 3. Generate the summaries from the fine-tuned models:
 `preprocess/multi_gpu_generate.py` is used to generate summaries. 
 
-4. Since the JAENS models generates the named entities before the summaries, we need to remove the named entities before evaluating the summaries. Example command:
-`python evaluate_hypo.py --mode remove_ent_from_hypo --base_dir <output-dir> --sub_dir <output-sub-dir> --split val --pattern .*.hypo`
+Since the JAENS models generates the named entities before the summaries, we need to remove the named entities before evaluating the summaries. Example command:
+```
+python evaluate_hypo.py --mode remove_ent_from_hypo --base_dir <output-dir> --sub_dir <output-sub-dir> --split val --pattern .*.hypo
+```
 
-To evaluate the generated summaries for ROUGE as well as entity level factual scores, we use the tokenizer from [Stanford CoreNLP package](https://stanfordnlp.github.io/CoreNLP/download.html). Example command:
+### 4. To evaluate the generated summaries for ROUGE as well as entity level factual scores:
+We use the tokenizer from [Stanford CoreNLP package](https://stanfordnlp.github.io/CoreNLP/download.html). Example command:
 ```bash
 export CLASSPATH=path/to/stanford-corenlp-full-2018-10-05/stanford-corenlp-3.9.2.jar
 python evaluate_hypo.py --mode evaluate_summary --base_dir <output-dir> --sub_dir <output-sub-dir> --split val --pattern .*.hypo
 ```
+See `preprocess/run_*_eval.sh` for examples.
 
 ## Summary-worthy entity classification with summarization (multi-task learning)
 We perform summary-worthy entity classification at a classification head on the encoder while keeping the seq2seq objective at the decoder. 
