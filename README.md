@@ -1,5 +1,5 @@
 # Entity-level Factual Consistency of Abstractive Text Summarization
-We provide the code for the paper "Entity-level Factual Consistency of Abstractive Text Summarization", by Feng Nan, Ramesh Nallapati, Zhiguo Wang, Cicero Nogueira dos Santos, Henghui Zhu, Dejiao Zhang, Kathleen McKeown and Bing Xiang, accepted to EACL 2021.
+We provide the code for the paper ["Entity-level Factual Consistency of Abstractive Text Summarization"](https://arxiv.org/abs/2102.09130), by Feng Nan, Ramesh Nallapati, Zhiguo Wang, Cicero Nogueira dos Santos, Henghui Zhu, Dejiao Zhang, Kathleen McKeown and Bing Xiang, accepted to EACL 2021.
 
 In this repo, we provide a set of new metrics to quantify the entity-level factual consistency of generated summaries. We also provide code for the two methods in our paper:
 - JAENS: joint entity and summary generation, and
@@ -11,7 +11,7 @@ Our code is based on the [fairseq](https://github.com/pytorch/fairseq) library a
 
 - `python==3.6`: `conda create -n entity_fact python=3.6`
 - `pytorch==1.4.0`: `pip install torch==1.4.0 torchvision==0.5.0`
-    - run `pip install --editable ./`
+- run `pip install --editable ./`
 - install `file2rouge` following instructions [here](https://github.com/pltrdy/files2rouge)
 - download `en_core_web_lg`: `python -m spacy download en_core_web_lg`
 
@@ -42,7 +42,7 @@ Download bpe encoder.json, vocabulary and fairseq dictionary to a directory, say
 ```bash
 wget -O <bpe-dir>/encoder.json 'https://dl.fbaipublicfiles.com/fairseq/gpt2_bpe/encoder.json'
 wget -O <bpe-dir>/vocab.bpe 'https://dl.fbaipublicfiles.com/fairseq/gpt2_bpe/vocab.bpe'
-wget -N <bpe-dir>/dict.txt'https://dl.fbaipublicfiles.com/fairseq/gpt2_bpe/dict.txt'
+wget -N <bpe-dir>/dict.txt' https://dl.fbaipublicfiles.com/fairseq/gpt2_bpe/dict.txt'
 
 cd preprocess
 python data_prepro_clean.py --mode bpe_binarize --input_dir <processed-data-dir> --tokenizer_dir <bpe-dir>
@@ -113,3 +113,16 @@ python create_entity_classification_labels.py --base_dir <processed-data-dir> --
 python data_prepro_clean.py --mode binarize_cls_labels --input_dir <processed-data-dir> --output_dir <processed-data-dir>/data_bin --tokenizer_dir <bpe-dir>
 ```
 Launch training jobs using scripts `scripts/launch_multitask_*.py`.
+
+## Citation
+```angular2
+@inproceedings{nan21eacl,
+    title = {Entity-level Factual Consistency of Abstractive Text Summarization},
+    author = {Feng Nan and Ramesh Nallapati and Zhiguo Wang and Cicero Nogueira dos Santos and Henghui Zhu and Dejiao Zhang and Kathleen McKeown and Bing Xiang},
+    booktitle = {Conference of the European Chapter of the Association for Computational Linguistics (EACL)},
+    address = {Online},
+    month = {April},
+    url = {https://arxiv.org/abs/2102.09130},
+    year = {2021}
+}
+```
