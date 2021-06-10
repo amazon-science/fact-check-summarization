@@ -146,6 +146,8 @@ setup(
         'sagemaker==1.50.7',
         'spacy==2.3.2',
         'pandas==1.0.1',
+        'rouge-score==0.0.4',
+        'scispacy==0.2.5',
     ],
     dependency_links=dependency_links,
     packages=find_packages(exclude=['scripts', 'tests']),

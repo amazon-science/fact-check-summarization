@@ -335,6 +335,8 @@ class LanguagePairDataset(FairseqDataset):
         """Return an ordered list of indices. Batches will be constructed based
         on this order."""
         if self.shuffle:
+            # added by Feng to ensure pos and neg examples are aligned for unlikelihood.
+            np.random.seed(1)
             indices = np.random.permutation(len(self))
         else:
             indices = np.arange(len(self))
