@@ -137,6 +137,11 @@ To train the QAGen model, place the `dev-v1.1.json` and `train-v1.1.json` of SQu
 ```
 python data_prepro_clean.py --mode newsqa_squad_prepro --input_dir <squad-newsqa-dir> --output_dir <squad-newsqa-dir>
 ```
+You can also download our trained QAGen model from s3 by running:
+```
+aws s3 cp s3://fact-check-summarization/newsqa-squad-qagen-checkpoint/checkpoint2.pt <QAGen-model-dir>/
+```
+Alternatively, you can download [here](https://fact-check-summarization.s3.amazonaws.com/newsqa-squad-qagen-checkpoint/checkpoint2.pt) if you don't have awscli.
 
 #### 2. Filter the generated question and answer for high quality pairs
 ```
