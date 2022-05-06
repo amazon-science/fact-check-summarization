@@ -163,7 +163,7 @@ To use *QUALS* to improve factual consistency of the summarization model using t
 2. Use the MLE summarization model to sample summaries on the training data.
 3. Evaluate the *QUALS* for the generated summaries as well as the ground truth summaries of the training data.
 4. Form the positive and negative sets for contrastive learning.
-5. Fine-tune the MLE summarization model using the positive and negative examples. Example scripts for launching training jobs locally or on Sagemaker are  `preprocess/run_generate_unlikelihood_train_cnndm.sh` and  `preprocess/run_generate_unlikelihood_train_xsum.sh`.
+5. Fine-tune the MLE summarization model using the positive and negative examples. Example scripts for launching training jobs locally or on Sagemaker are  `scripts/launch_sagemaker_unlikelihood_cnndm.py` and  `scripts/launch_sagemaker_unlikelihood_xsum.py`.
 
 We provide an example script `preprocess/run_generate_unlikelihood_train_xsum.sh` to illustrate steps 2-4.
 Note that
